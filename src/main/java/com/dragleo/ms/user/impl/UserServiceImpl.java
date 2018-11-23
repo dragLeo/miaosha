@@ -1,5 +1,8 @@
 package com.dragleo.ms.user.impl;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,8 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dragleo.ms.common.UUIDUtils;
 import com.dragleo.ms.common.md5.MD5Utils;
+import com.dragleo.ms.login.helper.LoginContant;
+import com.dragleo.ms.login.helper.LoginKey;
 import com.dragleo.ms.login.model.LoginVO;
+import com.dragleo.ms.redis.RedisHelper;
 import com.dragleo.ms.user.dao.IUserDao;
 import com.dragleo.ms.user.domain.UserVO;
 import com.dragleo.ms.user.service.IUserService;
@@ -19,6 +26,8 @@ public class UserServiceImpl implements IUserService{
 
 	@Autowired
 	private IUserDao userDao;
+	@Autowired
+	private RedisHelper redisHelper;
 	
 	@Transactional
 	@Override
@@ -35,7 +44,7 @@ public class UserServiceImpl implements IUserService{
 	}
 
 	@Override
-	public boolean login(LoginVO loginVo) throws Exception {
+	public boolean login(HttpServletResponse response,LoginVO loginVo) throws Exception {
 		String mobile =loginVo.getMobile();
 		String password =loginVo.getPassword();
 		if(StringUtils.isEmpty(mobile)){
@@ -49,9 +58,37 @@ public class UserServiceImpl implements IUserService{
 //		String md5Salt = MD5Utils.md5Salt(password);
 //		loginVo.setPassword(md5Salt);
 		LoginVO vo = userDao.login(loginVo);
-		if(null != vo)
+		if(null != vo){
+			String token = UUIDUtils.genUUID();
+			addCookie(response, token, vo);
 			return true;
+		}
 		return false;
+	}
+
+
+	@Override
+	public LoginVO getLoginByToken(HttpServletResponse response,String token) {
+		LoginVO vo = redisHelper.getKey(LoginKey.token, token, LoginVO.class);
+		if(null !=vo){
+			addCookie(response, token, vo);
+		}
+		return null;
+	}
+
+
+	/**
+	 * update cookie expire time
+	 * @param response
+	 * @param token
+	 * @param vo
+	 */
+	private void addCookie(HttpServletResponse response, String token, LoginVO vo) {
+		redisHelper.setKey(LoginKey.token, token, vo);
+		Cookie cookie = new Cookie(LoginContant.COOKI_NAME_TOKEN,token );
+		cookie.setMaxAge(LoginKey.token.expireTime());
+		cookie.setPath("/");
+		response.addCookie(cookie);
 	}
 
 }

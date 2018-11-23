@@ -1,5 +1,9 @@
 package com.dragleo.ms.login.controller;
 
+import java.awt.Toolkit;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.xml.transform.Result;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.dragleo.ms.common.result.AjaxResult;
 import com.dragleo.ms.login.model.LoginVO;
+import com.dragleo.ms.redis.RedisHelper;
 import com.dragleo.ms.user.service.IUserService;
 
 
@@ -21,25 +26,30 @@ import com.dragleo.ms.user.service.IUserService;
 @RequestMapping("/login")
 public class LoginController {
 	
+	
 	@Autowired
 	private IUserService userService;
+	
 	private static Logger log= LoggerFactory.getLogger(LoginController.class);
 
 	@RequestMapping("/askLogin")
-    public String askLogin() {
+    public String askLogin(HttpServletRequest request) {
+		
         return "login";
     }
 	
 	@RequestMapping("/doLogin")
     @ResponseBody
-    public AjaxResult<Boolean> doLogin(HttpServletResponse response, @Valid LoginVO loginVo) {
+    public AjaxResult<Boolean> doLogin(HttpServletRequest request ,HttpServletResponse response, @Valid LoginVO loginVo) {
     	log.info(loginVo.toString());
     	//登录
     	boolean login=false;
 		try {
-			login = userService.login(loginVo);
+			login = userService.login(response,loginVo);
 			if(login){
-	    		return AjaxResult.success(login);
+				 
+				return AjaxResult.success(login);
+				
 	    	}
 			return AjaxResult.error(login);
 		} catch (Exception e) {
