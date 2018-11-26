@@ -17,7 +17,7 @@ import com.dragleo.ms.login.helper.LoginKey;
 import com.dragleo.ms.login.model.LoginVO;
 import com.dragleo.ms.redis.RedisHelper;
 import com.dragleo.ms.user.dao.IUserDao;
-import com.dragleo.ms.user.domain.UserVO;
+import com.dragleo.ms.user.model.UserVO;
 import com.dragleo.ms.user.service.IUserService;
 
 @Service
@@ -57,7 +57,7 @@ public class UserServiceImpl implements IUserService{
 		}
 //		String md5Salt = MD5Utils.md5Salt(password);
 //		loginVo.setPassword(md5Salt);
-		LoginVO vo = userDao.login(loginVo);
+		UserVO vo = userDao.login(loginVo);
 		if(null != vo){
 			String token = UUIDUtils.genUUID();
 			addCookie(response, token, vo);
@@ -68,10 +68,11 @@ public class UserServiceImpl implements IUserService{
 
 
 	@Override
-	public LoginVO getLoginByToken(HttpServletResponse response,String token) {
-		LoginVO vo = redisHelper.getKey(LoginKey.token, token, LoginVO.class);
+	public UserVO getLoginByToken(HttpServletResponse response,String token) {
+		UserVO vo = redisHelper.getKey(LoginKey.token, token, UserVO.class);
 		if(null !=vo){
 			addCookie(response, token, vo);
+			return vo;
 		}
 		return null;
 	}
@@ -83,7 +84,7 @@ public class UserServiceImpl implements IUserService{
 	 * @param token
 	 * @param vo
 	 */
-	private void addCookie(HttpServletResponse response, String token, LoginVO vo) {
+	private void addCookie(HttpServletResponse response, String token, UserVO vo) {
 		redisHelper.setKey(LoginKey.token, token, vo);
 		Cookie cookie = new Cookie(LoginContant.COOKI_NAME_TOKEN,token );
 		cookie.setMaxAge(LoginKey.token.expireTime());

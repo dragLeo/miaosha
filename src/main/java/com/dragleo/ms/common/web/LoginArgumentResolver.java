@@ -1,7 +1,5 @@
 package com.dragleo.ms.common.web;
 
-import java.util.Enumeration;
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,8 +14,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import com.dragleo.ms.login.helper.LoginContant;
-import com.dragleo.ms.login.model.LoginVO;
-import com.dragleo.ms.user.domain.UserVO;
+import com.dragleo.ms.user.model.UserVO;
 import com.dragleo.ms.user.service.IUserService;
 @Component
 public class LoginArgumentResolver implements HandlerMethodArgumentResolver{
