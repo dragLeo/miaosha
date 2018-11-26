@@ -3,7 +3,7 @@ package com.dragleo.ms.user.service;
 import javax.servlet.http.HttpServletResponse;
 
 import com.dragleo.ms.login.model.LoginVO;
-import com.dragleo.ms.user.domain.UserVO;
+import com.dragleo.ms.user.model.UserVO;
 
 public interface IUserService {
 
@@ -19,5 +19,5 @@ public interface IUserService {
 	 * @param token
 	 * @return
 	 */
-	public LoginVO getLoginByToken(HttpServletResponse response, String token);
+	public UserVO getLoginByToken(HttpServletResponse response, String token);
 }

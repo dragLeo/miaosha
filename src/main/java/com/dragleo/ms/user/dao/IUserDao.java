@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import com.dragleo.ms.login.model.LoginVO;
-import com.dragleo.ms.user.domain.UserVO;
+import com.dragleo.ms.user.model.UserVO;
 
 @Mapper
 public interface IUserDao {
@@ -20,7 +20,7 @@ public interface IUserDao {
 	public void insertVO(UserVO userVO);
 	
 	@Select("select * from rms_user where mobile=#{mobile} and password=#{password}")
-	public LoginVO login(LoginVO loginVo);
+	public UserVO login(LoginVO loginVo);
 
 	
 }
