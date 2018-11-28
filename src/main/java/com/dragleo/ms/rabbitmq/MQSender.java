@@ -17,11 +17,13 @@ public class MQSender {
 	
 	@Autowired
 	AmqpTemplate amqpTemplate ;
+	@Autowired
+	RedisHelper redisHelper;
 	
-	public void sendMiaoshaMessage(Object mm) {
-		String msg = RedisHelper.bean2String(mm);
+	public void sendMiaoshaMessage(MiaoshaMessage mm) {
+		String msg = redisHelper.bean2String(mm);
 		log.info("send message:"+msg);
-		amqpTemplate.convertAndSend(MQConfig.QUEUE, msg);
+		amqpTemplate.convertAndSend(MQConfig.MIAOSHA_QUEUE, msg);
 	}
 	
 //	public void send(Object message) {

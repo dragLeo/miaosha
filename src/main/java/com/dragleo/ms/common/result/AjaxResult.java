@@ -9,13 +9,20 @@ public class AjaxResult<T> {
 	
 	
 	
-	public AjaxResult() {
+	private AjaxResult() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public AjaxResult(T data) {
+	private AjaxResult(T data) {
 		super();
 		this.data = data;
+	}
+	
+	private AjaxResult(CodeMsg codeMsg) {
+		if(codeMsg != null) {
+			this.code = codeMsg.getCode();
+			this.msg = codeMsg.getMsg();
+		}
 	}
 	
 	/**
@@ -36,6 +43,9 @@ public class AjaxResult<T> {
 		return new AjaxResult<T>(data);
 	}
 	
+	public static  <T> AjaxResult<T> error(CodeMsg codeMsg){
+		return new AjaxResult<T>(codeMsg);
+	}
 	
 	
 	public int getCode() {

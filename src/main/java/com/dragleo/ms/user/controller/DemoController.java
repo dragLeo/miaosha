@@ -32,7 +32,7 @@ public class DemoController {
 	@RequestMapping("/mq")
 	@ResponseBody
 	public AjaxResult<String> mq() {
-		mqSender.sendMiaoshaMessage("hello world");
+//		mqSender.sendMiaoshaMessage("hello world");
 		return AjaxResult.success("qwertyuiop");
 	}
 	@RequestMapping("/mq/topic")

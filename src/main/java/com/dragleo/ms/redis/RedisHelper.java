@@ -98,4 +98,34 @@ public class RedisHelper {
 		}
 	}
 	
+	/**
+	 * 增加值
+	 * */
+	public <T> Long incr(PrefixKey prefix, String key) {
+		 Jedis jedis = null;
+		 try {
+			 jedis =  jedisPool.getResource();
+			//生成真正的key
+			 String realKey  = prefix.getPrefix() + key;
+			return  jedis.incr(realKey);
+		 }finally {
+			 closeJedis(jedis);
+		 }
+	}
+	
+	/**
+	 * 减少值
+	 * */
+	public <T> Long decr(PrefixKey prefix, String key) {
+		 Jedis jedis = null;
+		 try {
+			 jedis =  jedisPool.getResource();
+			//生成真正的key
+			 String realKey  = prefix.getPrefix() + key;
+			return  jedis.decr(realKey);
+		 }finally {
+			 closeJedis(jedis);
+		 }
+	}
+	
 }
