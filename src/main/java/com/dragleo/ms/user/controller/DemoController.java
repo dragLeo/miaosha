@@ -6,9 +6,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.dragleo.ms.common.result.AjaxResult;
+import com.dragleo.ms.rabbitmq.MQSender;
 import com.dragleo.ms.redis.RedisHelper;
-import com.dragleo.ms.user.domain.UserVO;
 import com.dragleo.ms.user.helper.UserKey;
+import com.dragleo.ms.user.model.UserVO;
 import com.dragleo.ms.user.service.IUserService;
 
 @Controller
@@ -20,11 +21,38 @@ public class DemoController {
 	@Autowired
 	private RedisHelper helper;
 	
+	@Autowired
+	private MQSender mqSender;
+	
 	@RequestMapping("/hello")
     @ResponseBody
     public AjaxResult<UserVO> home() {
         return AjaxResult.success(userService.loadById(1));
     }
+	@RequestMapping("/mq")
+	@ResponseBody
+	public AjaxResult<String> mq() {
+		mqSender.sendMiaoshaMessage("hello world");
+		return AjaxResult.success("qwertyuiop");
+	}
+	@RequestMapping("/mq/topic")
+	@ResponseBody
+	public AjaxResult<String> mqTopic() {
+		mqSender.sendTopic("hello world");
+		return AjaxResult.success("what can distract me ..only DUKANG");
+	}
+	@RequestMapping("/mq/fanout")
+	@ResponseBody
+	public AjaxResult<String> mqFanout() {
+		mqSender.sendFanout("hello world");
+		return AjaxResult.success("what can distract me ..only DUKANG");
+	}
+	@RequestMapping("/mq/header")
+	@ResponseBody
+	public AjaxResult<String> mqHeader() {
+		mqSender.sendHeader("hello world");
+		return AjaxResult.success("what can distract me ..only DUKANG");
+	}
 	
 	@RequestMapping("/getUser")
     @ResponseBody

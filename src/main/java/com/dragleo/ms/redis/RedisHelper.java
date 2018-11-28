@@ -61,7 +61,7 @@ public class RedisHelper {
 		}
 	}
 	
-	private <T>String bean2String(T value){
+	public static <T>String bean2String(T value){
 		if(value ==null)
 			return null;
 		Class<?> clazz =value.getClass();
@@ -77,7 +77,7 @@ public class RedisHelper {
 	}
 	
 	@SuppressWarnings({ "unchecked", "unused" })
-	private <T> T string2Bean(String str,Class<T> clazz){
+	public static <T> T string2Bean(String str,Class<T> clazz){
 		if(str == null || str.length() <= 0 || clazz == null) {
 			 return null;
 		}
